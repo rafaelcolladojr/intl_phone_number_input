@@ -20,6 +20,9 @@ class SelectorButton extends StatelessWidget {
 
   final ValueChanged<Country?> onCountryChanged;
 
+  final Widget Function(BuildContext,
+      {List<Country> countries, VoidCallback onPressed})? selectorBuilder;
+
   const SelectorButton({
     Key? key,
     required this.countries,
@@ -32,6 +35,7 @@ class SelectorButton extends StatelessWidget {
     required this.onCountryChanged,
     required this.isEnabled,
     required this.isScrollControlled,
+    this.selectorBuilder,
   }) : super(key: key);
 
   @override
@@ -62,39 +66,46 @@ class SelectorButton extends StatelessWidget {
                 trailingSpace: selectorConfig.trailingSpace,
                 textStyle: selectorTextStyle,
               )
-        : MaterialButton(
-            key: Key(TestHelper.DropdownButtonKeyValue),
-            padding: EdgeInsets.zero,
-            minWidth: 0,
-            onPressed: countries.isNotEmpty && countries.length > 1 && isEnabled
-                ? () async {
-                    Country? selected;
-                    if (selectorConfig.selectorType ==
-                        PhoneInputSelectorType.BOTTOM_SHEET) {
-                      selected = await showCountrySelectorBottomSheet(
-                          context, countries);
-                    } else {
-                      selected =
-                          await showCountrySelectorDialog(context, countries);
-                    }
+        : selectorBuilder != null
+            ? selectorBuilder!
+                .call(context, countries: countries, onPressed: () {})
+            : MaterialButton(
+                key: Key(TestHelper.DropdownButtonKeyValue),
+                padding: EdgeInsets.zero,
+                minWidth: 0,
+                onPressed:
+                    countries.isNotEmpty && countries.length > 1 && isEnabled
+                        ? () async {
+                            Country? selected;
+                            if (selectorConfig.selectorType ==
+                                PhoneInputSelectorType.BOTTOM_SHEET) {
+                              selected = await showCountrySelectorBottomSheet(
+                                  context, countries);
+                            } else {
+                              selected = await showCountrySelectorDialog(
+                                  context, countries);
+                            }
 
-                    if (selected != null) {
-                      onCountryChanged(selected);
-                    }
-                  }
-                : null,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Item(
-                country: country,
-                showFlag: selectorConfig.showFlags,
-                useEmoji: selectorConfig.useEmoji,
-                leadingPadding: selectorConfig.leadingPadding,
-                trailingSpace: selectorConfig.trailingSpace,
-                textStyle: selectorTextStyle,
-              ),
-            ),
-          );
+                            if (selected != null) {
+                              onCountryChanged(selected);
+                            }
+                          }
+                        : null,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 32),
+                  child: Center(
+                    child: Item(
+                      country: country,
+                      showFlag: false,
+                      useEmoji: selectorConfig.useEmoji,
+                      leadingPadding: selectorConfig.leadingPadding,
+                      trailingSpace: selectorConfig.trailingSpace,
+                      textStyle: selectorTextStyle,
+                    ),
+                  ),
+                ),
+              );
   }
 
   /// Converts the list [countries] to `DropdownMenuItem`

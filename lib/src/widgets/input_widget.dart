@@ -86,6 +86,9 @@ class InternationalPhoneNumberInput extends StatefulWidget {
 
   final List<String>? countries;
 
+  final Widget Function(BuildContext,
+      {List<Country> countries, VoidCallback onPressed})? selectorBuilder;
+
   InternationalPhoneNumberInput(
       {Key? key,
       this.selectorConfig = const SelectorConfig(),
@@ -115,6 +118,7 @@ class InternationalPhoneNumberInput extends StatefulWidget {
       this.locale,
       this.textStyle,
       this.selectorTextStyle,
+      this.selectorBuilder,
       this.inputBorder,
       this.inputDecoration,
       this.searchBoxDecoration,
