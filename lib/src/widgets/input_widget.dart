@@ -87,7 +87,9 @@ class InternationalPhoneNumberInput extends StatefulWidget {
   final List<String>? countries;
 
   final Widget Function(BuildContext,
-      {List<Country> countries, VoidCallback onPressed})? selectorBuilder;
+      {List<Country> countries,
+      Country? country,
+      VoidCallback onPressed})? selectorBuilder;
 
   InternationalPhoneNumberInput(
       {Key? key,
@@ -414,6 +416,7 @@ class _InputWidgetView
                   isEnabled: widget.isEnabled,
                   autoFocusSearchField: widget.autoFocusSearch,
                   isScrollControlled: widget.countrySelectorScrollControlled,
+                  selectorBuilder: widget.selectorBuilder,
                 ),
                 SizedBox(
                   height: state.selectorButtonBottomPadding,
