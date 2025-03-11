@@ -22,9 +22,9 @@ class SelectorButton extends StatelessWidget {
 
   final Widget Function(
     BuildContext, {
-    List<Country> countries,
+    required List<Country> countries,
+    required VoidCallback onPressed,
     Country? country,
-    VoidCallback onPressed,
   })? selectorBuilder;
 
   const SelectorButton({

@@ -86,10 +86,12 @@ class InternationalPhoneNumberInput extends StatefulWidget {
 
   final List<String>? countries;
 
-  final Widget Function(BuildContext,
-      {List<Country> countries,
-      Country? country,
-      VoidCallback onPressed})? selectorBuilder;
+  final Widget Function(
+    BuildContext, {
+    required List<Country> countries,
+    required VoidCallback onPressed,
+    Country? country,
+  })? selectorBuilder;
 
   InternationalPhoneNumberInput(
       {Key? key,
