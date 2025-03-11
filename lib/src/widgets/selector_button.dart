@@ -22,7 +22,7 @@ class SelectorButton extends StatelessWidget {
 
   final Widget Function(
     BuildContext, {
-    required VoidCallback onPressed,
+    VoidCallback? onPressed,
     Country? country,
   })? selectorBuilder;
 
@@ -70,29 +70,22 @@ class SelectorButton extends StatelessWidget {
                 textStyle: selectorTextStyle,
               )
         : selectorBuilder != null
-            ? selectorBuilder!.call(context, country: country, onPressed: () {})
+            ? selectorBuilder!.call(
+                context,
+                country: country,
+                onPressed:
+                    (countries.isNotEmpty && countries.length > 1 && isEnabled
+                        ? () => _onButtonPressed(context)
+                        : null),
+              )
             : MaterialButton(
                 key: Key(TestHelper.DropdownButtonKeyValue),
                 padding: EdgeInsets.zero,
                 minWidth: 0,
                 onPressed:
-                    countries.isNotEmpty && countries.length > 1 && isEnabled
-                        ? () async {
-                            Country? selected;
-                            if (selectorConfig.selectorType ==
-                                PhoneInputSelectorType.BOTTOM_SHEET) {
-                              selected = await showCountrySelectorBottomSheet(
-                                  context, countries);
-                            } else {
-                              selected = await showCountrySelectorDialog(
-                                  context, countries);
-                            }
-
-                            if (selected != null) {
-                              onCountryChanged(selected);
-                            }
-                          }
-                        : null,
+                    (countries.isNotEmpty && countries.length > 1 && isEnabled
+                        ? () => _onButtonPressed(context)
+                        : null),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8.0, vertical: 32),
@@ -108,6 +101,19 @@ class SelectorButton extends StatelessWidget {
                   ),
                 ),
               );
+  }
+
+  Future<void> _onButtonPressed(BuildContext context) async {
+    Country? selected;
+    if (selectorConfig.selectorType == PhoneInputSelectorType.BOTTOM_SHEET) {
+      selected = await showCountrySelectorBottomSheet(context, countries);
+    } else {
+      selected = await showCountrySelectorDialog(context, countries);
+    }
+
+    if (selected != null) {
+      onCountryChanged(selected);
+    }
   }
 
   /// Converts the list [countries] to `DropdownMenuItem`
