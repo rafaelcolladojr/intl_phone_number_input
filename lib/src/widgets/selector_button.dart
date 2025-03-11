@@ -20,8 +20,12 @@ class SelectorButton extends StatelessWidget {
 
   final ValueChanged<Country?> onCountryChanged;
 
-  final Widget Function(BuildContext,
-      {List<Country> countries, VoidCallback onPressed})? selectorBuilder;
+  final Widget Function(
+    BuildContext, {
+    List<Country> countries,
+    Country? country,
+    VoidCallback onPressed,
+  })? selectorBuilder;
 
   const SelectorButton({
     Key? key,
@@ -67,8 +71,8 @@ class SelectorButton extends StatelessWidget {
                 textStyle: selectorTextStyle,
               )
         : selectorBuilder != null
-            ? selectorBuilder!
-                .call(context, countries: countries, onPressed: () {})
+            ? selectorBuilder!.call(context,
+                countries: countries, country: country, onPressed: () {})
             : MaterialButton(
                 key: Key(TestHelper.DropdownButtonKeyValue),
                 padding: EdgeInsets.zero,
